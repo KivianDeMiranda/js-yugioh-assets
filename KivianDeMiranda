@@ -1,0 +1,174 @@
+# Yu-Gi-Oh | Jo-ken-po Edition
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="./src/assets/favicon/Favicon.ico">
+    <link rel="stylesheet" href="./src/styles/main.css">
+    <link rel="stylesheet" href="./src/styles/containers_and_frames.css">
+    <link rel="stylesheet" href="./src/styles/buttons.css">
+    <title>Yu-Gi-Oh! Jo-ken-Po Edition</title>
+</head>
+<body>
+    <audio id="bgm" loop>
+        <source src="./src/assets/audios/egyptian_duel.mp3" type="audio/mp3">
+    </audio>
+    <div class="bg-video">
+        <video class="video" autoplay loop muted>
+            <source src="./src/assets/video/yugi.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="container">
+        <div class="container__left framed-golden-2">
+            <div class="score_box frame">
+                <span id="score_points">Win: 0 | Lose: 0</span>
+            </div>
+            <div class="menu__avatar">
+                <img id="card-image" />
+            </div>
+            <div class="card-details">
+                <p id="card-name"></p>
+                <p id="card-type"></p>
+            </div>
+        </div>
+        <div class="container__right">
+            <div class="card-box__container">
+                <div class="card-box framed" id="enemy-cards"></div>
+                <div class="card-versus">
+                    <div class="versus-top">
+                        <div class="card-infield">
+                            <img id="player-field-card" height="180px" width="125px" />
+                        </div>
+                        <img height="100px" src="./src/assets/icons/millenium2.png">
+                        <div class="card-infield">
+                            <img id="computer-field-card" height="180px" width="125px" />
+                        </div>
+                    </div>
+                    <div class="versus-bottom">
+                        <button id="next-duel" class="rpgui-button" onclick="resetDuel()">GANHOU</button>
+                    </div>
+                </div>
+                <div class="card-box framed" id="player-cards"></div>
+            </div>
+        </div>
+    </div>
+    <script defer src="./src/scripts/engine.js"></script>
+</body>
+</html>
+body {
+    font-family: 'Press Start 2P', cursive, 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    z-index: -1;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container__left, .container__right {
+    margin: 20px;
+}
+
+.score_box {
+    margin-bottom: 20px;
+}
+
+.card-details {
+    font-size: 16px;
+}
+
+.card-box__container {
+    display: flex;
+    justify-content: center;
+}
+
+.card-box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+}
+
+.card-infield {
+    background-color: #ccc;
+    border: 1px solid #000;
+    border-radius: 8px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.rpgui-button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const scorePoints = document.getElementById('score_points');
+    const playerFieldCard = document.getElementById('player-field-card');
+    const computerFieldCard = document.getElementById('computer-field-card');
+    const cardImage = document.getElementById('card-image');
+    const cardName = document.getElementById('card-name');
+    const cardType = document.getElementById('card-type');
+
+    let win = 0;
+    let lose = 0;
+
+    function resetDuel() {
+        // Função para resetar o duelo
+        alert('Resetando duelo!');
+    }
+
+    function fetchCardData(cardID) {
+        fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardID}`)
+            .then(response => response.json())
+            .then(data => {
+                const card = data.data[0];
+                cardImage.src = card.card_images[0].image_url;
+                cardName.innerText = card.name;
+                cardType.innerText = card.type;
+            })
+            .catch(error => console.error('Erro ao buscar dados da carta:', error));
+    }
+
+    // Exemplo: Fetch dados da carta ID 89631139
+    fetchCardData(89631139);
+});
+.framed-golden-2 {
+    border: 2px solid gold;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.frame {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.framed {
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 10px;
+}
